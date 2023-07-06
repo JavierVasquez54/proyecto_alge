@@ -1,7 +1,7 @@
 import numpy as np
 
 #para todos
-def mostrar_matriz(matriz):
+def mostrar(matriz):
     for fila in matriz:
         print(fila)
 
@@ -14,6 +14,18 @@ def ingresar_matriz():
     for i in range(filas):
         fila = []
         for j in range(columnas):
+            elemento = float(input(f"Ingrese el elemento [{i + 1}][{j + 1}]: "))
+            fila.append(elemento)
+        matriz.append(fila)
+
+    return matriz
+
+def ingresar_estado():
+    matriz = []
+    print("Ingrese los elementos de la matriz:")
+    for i in range(3):
+        fila = []
+        for j in range(1):
             elemento = float(input(f"Ingrese el elemento [{i + 1}][{j + 1}]: "))
             fila.append(elemento)
         matriz.append(fila)
@@ -74,18 +86,18 @@ def multiplicar(matriz1, matriz2):
         resultado.append(fila)
     return resultado
 
-def mostrar_procedimiento_op(matriz1, matriz2, resultado, operacion):
+def procedimiento(matriz1, matriz2, resultado, operacion):
     filas_1 = len(matriz1)
     columnas1 = len(matriz1[0])
     columnas2 = len(matriz2[0])
 
     print("\nProcedimiento: Operación: {operacion}\n")
     print("Matriz 1:")
-    mostrar_matriz(matriz1)
+    mostrar(matriz1)
     print("\nMatriz 2:")
-    mostrar_matriz(matriz2)
+    mostrar(matriz2)
     print("\nResultado:")
-    mostrar_matriz(resultado)
+    mostrar(resultado)
     print("\n Pasos:")
     if operacion == "Suma" or operacion == "Resta":
         if operacion == "Suma":
@@ -107,7 +119,7 @@ def mostrar_procedimiento_op(matriz1, matriz2, resultado, operacion):
 
 # matriz inversa
 
-def calcular_inversa(matriz):
+def inversa(matriz):
     try:
         matriz_np = np.array(matriz)
         identidad = np.eye(matriz_np.shape[0])
@@ -126,10 +138,8 @@ def calcular_inversa(matriz):
 
 # rango de matriz
 
-def calcular_rango(matriz):
+def rango(matriz):
     matriz_np = np.array(matriz)
-
-    # Realizar la eliminación Gaussiana
     filas, columnas = matriz_np.shape
     rango = 0
     for i in range(min(filas, columnas)):
@@ -138,13 +148,10 @@ def calcular_rango(matriz):
         for fila in matriz_np:
             print(f"   {fila}")
         print()
-
         if matriz_np[i, i] == 0:
             print(f"   No se puede hacer un pivote en la fila {i + 1}.")
             continue
-
         print(f"   Pivote en la fila {i + 1}: {matriz_np[i, i]}")
-
         rango += 1
         for j in range(i + 1, filas):
             coeficiente = matriz_np[j, i] / matriz_np[i, i]
@@ -153,16 +160,14 @@ def calcular_rango(matriz):
 
     return rango
 
-def mostrar_paso_a_paso(matriz):
+def paso_a_paso(matriz):
     print("\nProcedimiento para calcular el rango de la matriz:")
     print("1. La matriz original es:")
     for fila in matriz:
         print(f"   {fila}")
-
-    rango = calcular_rango(matriz)
-
+    Rango = rango(matriz)
     print("\n2. Paso a paso del cálculo:")
-    print(f"   El rango final de la matriz es: {rango}")
+    print(f"   El rango final de la matriz es: {Rango}")
 
 # Determinate de una matriz
 
@@ -170,38 +175,28 @@ def calcular_determinante(matriz):
     matriz_np = np.array(matriz)
     n = matriz_np.shape[0]
     etapas = []
-
     def mostrar_etapa(matriz, etapa):
         print(f"\nEtapa {etapa + 1}:")
         print("Matriz actual:")
         for fila in matriz:
             print(f"   {fila}")
-
     mostrar_etapa(matriz_np, -1)
-
     def calcular_cofactor(matriz, fila, columna):
         submatriz = np.delete(np.delete(matriz, fila, axis=0), columna, axis=1)
-        print(f"Submatriz:")
-        print(submatriz)
         return (-1) ** (fila + columna) * np.linalg.det(submatriz)
-
     for i in range(n):
         etapa = {}
         etapa["Paso"] = f"Paso {i + 1}"
-
         cofactores = [calcular_cofactor(matriz_np, 0, j) for j in range(n)]
         etapa["Cofactores"] = cofactores
-
         determinante_parcial = matriz_np[0, i] * cofactores[i]
         etapa["Determinante parcial"] = determinante_parcial
-
         etapas.append(etapa)
         mostrar_etapa(matriz_np, i)
-
     determinante = np.sum([etapa["Determinante parcial"] for etapa in etapas])
     return determinante, etapas
 
-def mostrar_resultado(determinante, etapas):
+def resultado(determinante, etapas):
     print("\nProcedimiento paso a paso:")
     for etapa in etapas:
         print(etapa)
@@ -223,20 +218,13 @@ def ingresar_sistema():
     return sistema
 
 def calcular_determinante_sa(matriz):
-    a = matriz[0][0]
-    b = matriz[0][1]
-    c = matriz[0][2]
-    d = matriz[1][0]
-    e = matriz[1][1]
-    f = matriz[1][2]
-    g = matriz[2][0]
-    h = matriz[2][1]
-    i = matriz[2][2]
+    a = matriz[0][0], b = matriz[0][1], c = matriz[0][2], d = matriz[1][0], e = matriz[1][1]
+    f = matriz[1][2], g = matriz[2][0], h = matriz[2][1], i = matriz[2][2]
 
     determinante = a*e*i + b*f*g + c*d*h - c*e*g - a*f*h - b*d*i
     return determinante
 
-def mostrar_resultado_sa(x, y, z):
+def resultado_sa(x, y, z):
     print("\nEl sistema de ecuaciones tiene la siguiente solución:")
     print(f"x = {x}")
     print(f"y = {y}")
@@ -262,16 +250,13 @@ def mostrar_procedimiento(sistema):
 
     print(f"                         = {determinante_principal}\n")
 
-    x_coeficientes = [[sistema[0][3], sistema[0][1], sistema[0][2]],
-                      [sistema[1][3], sistema[1][1], sistema[1][2]],
+    x_coeficientes = [[sistema[0][3], sistema[0][1], sistema[0][2]], [sistema[1][3], sistema[1][1], sistema[1][2]],
                       [sistema[2][3], sistema[2][1], sistema[2][2]]]
 
-    y_coeficientes = [[sistema[0][0], sistema[0][3], sistema[0][2]],
-                      [sistema[1][0], sistema[1][3], sistema[1][2]],
+    y_coeficientes = [[sistema[0][0], sistema[0][3], sistema[0][2]], [sistema[1][0], sistema[1][3], sistema[1][2]],
                       [sistema[2][0], sistema[2][3], sistema[2][2]]]
 
-    z_coeficientes = [[sistema[0][0], sistema[0][1], sistema[0][3]],
-                      [sistema[1][0], sistema[1][1], sistema[1][3]],
+    z_coeficientes = [[sistema[0][0], sistema[0][1], sistema[0][3]], [sistema[1][0], sistema[1][1], sistema[1][3]],
                       [sistema[2][0], sistema[2][1], sistema[2][3]]]
 
     determinante_x = calcular_determinante_sa(x_coeficientes)
@@ -280,54 +265,35 @@ def mostrar_procedimiento(sistema):
 
     print("3. Calcule los determinantes de las incógnitas x, y y z.")
 
-    print("   Determinante X = (constante_x * coeficiente_y * coeficiente_z) + "
-          "(coeficiente_x * constante_y * coeficiente_z) + "
-          "(coeficiente_x * coeficiente_y * constante_z) - "
-          "(coeficiente_x * coeficiente_y * coeficiente_z) - "
-          "(constante_x * coeficiente_y * constante_z) - "
-          "(coeficiente_x * constante_y * coeficiente_z)")
+    print("   Determinante X = (constante_x * coeficiente_y * coeficiente_z) + (coeficiente_x * constante_y * coeficiente_z) + "
+          "(coeficiente_x * coeficiente_y * constante_z) - (coeficiente_x * coeficiente_y * coeficiente_z) - "
+          "(constante_x * coeficiente_y * constante_z) - (coeficiente_x * constante_y * coeficiente_z)")
 
-    print(f"                 = ({sistema[0][3]} * {sistema[0][1]} * {sistema[0][2]}) + "
-          f"({sistema[1][3]} * {sistema[1][1]} * {sistema[1][2]}) + "
-          f"({sistema[2][3]} * {sistema[2][1]} * {sistema[2][2]}) - "
-          f"({sistema[2][3]} * {sistema[1][1]} * {sistema[0][2]}) - "
-          f"({sistema[0][3]} * {sistema[1][1]} * {sistema[2][2]}) - "
-          f"({sistema[1][3]} * {sistema[2][1]} * {sistema[0][2]})")
+    print(f" = ({sistema[0][3]} * {sistema[0][1]} * {sistema[0][2]}) + {sistema[1][3]} * {sistema[1][1]} * {sistema[1][2]}) + "
+          f"({sistema[2][3]} * {sistema[2][1]} * {sistema[2][2]}) - {sistema[2][3]} * {sistema[1][1]} * {sistema[0][2]}) - "
+          f"({sistema[0][3]} * {sistema[1][1]} * {sistema[2][2]}) - {sistema[1][3]} * {sistema[2][1]} * {sistema[0][2]})")
 
     print(f"                 = {determinante_x}\n")
 
-    print("   Determinante Y = (coeficiente_x * constante_y * coeficiente_z) + "
-          "(constante_x * coeficiente_y * coeficiente_z) + "
-          "(coeficiente_x * coeficiente_y * constante_z) - "
-          "(coeficiente_x * coeficiente_y * coeficiente_z) - "
-          "(coeficiente_x * constante_y * constante_z) - "
-          "(constante_x * coeficiente_y * coeficiente_z)")
+    print("   Determinante Y = (coeficiente_x * constante_y * coeficiente_z) + (constante_x * coeficiente_y * coeficiente_z) + "
+          "(coeficiente_x * coeficiente_y * constante_z) - (coeficiente_x * coeficiente_y * coeficiente_z) - "
+          "(coeficiente_x * constante_y * constante_z) - (constante_x * coeficiente_y * coeficiente_z)")
 
-    print(f"                 = ({sistema[0][0]} * {sistema[0][3]} * {sistema[0][2]}) + "
-          f"({sistema[1][0]} * {sistema[1][3]} * {sistema[1][2]}) + "
-          f"({sistema[2][0]} * {sistema[2][3]} * {sistema[2][2]}) - "
-          f"({sistema[0][0]} * {sistema[1][3]} * {sistema[2][2]}) - "
-          f"({sistema[0][3]} * {sistema[1][0]} * {sistema[2][2]}) - "
-          f"({sistema[1][3]} * {sistema[2][0]} * {sistema[0][2]})")
+    print(f"= ({sistema[0][0]} * {sistema[0][3]} * {sistema[0][2]}) + {sistema[1][0]} * {sistema[1][3]} * {sistema[1][2]}) + "
+          f"({sistema[2][0]} * {sistema[2][3]} * {sistema[2][2]}) - {sistema[0][0]} * {sistema[1][3]} * {sistema[2][2]}) - "
+          f"{sistema[0][3]} * {sistema[1][0]} * {sistema[2][2]}) - {sistema[1][3]} * {sistema[2][0]} * {sistema[0][2]})")
 
     print(f"                 = {determinante_y}\n")
 
-    print("   Determinante Z = (coeficiente_x * coeficiente_y * constante_z) + "
-          "(coeficiente_x * constante_y * coeficiente_z) + "
-          "(constante_x * coeficiente_y * coeficiente_z) - "
-          "(coeficiente_x * coeficiente_y * coeficiente_z) - "
-          "(coeficiente_x * constante_y * coeficiente_z) - "
-          "(constante_x * coeficiente_y * constante_z)")
+    print("   Determinante Z = (coeficiente_x * coeficiente_y * constante_z) + (coeficiente_x * constante_y * coeficiente_z) + "
+          "(constante_x * coeficiente_y * coeficiente_z) - (coeficiente_x * coeficiente_y * coeficiente_z) - "
+          "(coeficiente_x * constante_y * coeficiente_z) - (constante_x * coeficiente_y * constante_z)")
 
-    print(f"                 = ({sistema[0][0]} * {sistema[0][1]} * {sistema[0][3]}) + "
-          f"({sistema[1][0]} * {sistema[1][1]} * {sistema[1][3]}) + "
-          f"({sistema[2][0]} * {sistema[2][1]} * {sistema[2][3]}) - "
-          f"({sistema[0][0]} * {sistema[1][1]} * {sistema[2][3]}) - "
-          f"({sistema[0][1]} * {sistema[1][3]} * {sistema[2][0]}) - "
-          f"({sistema[0][3]} * {sistema[1][1]} * {sistema[2][0]})")
+    print(f" = ({sistema[0][0]} * {sistema[0][1]} * {sistema[0][3]}) + {sistema[1][0]} * {sistema[1][1]} * {sistema[1][3]}) + "
+          f"({sistema[2][0]} * {sistema[2][1]} * {sistema[2][3]}) - {sistema[0][0]} * {sistema[1][1]} * {sistema[2][3]}) - "
+          f"({sistema[0][1]} * {sistema[1][3]} * {sistema[2][0]}) - {sistema[0][3]} * {sistema[1][1]} * {sistema[2][0]})")
 
-    print(f"                 = {determinante_z}\n")
-
+    print(f"= {determinante_z}\n")
     print("4. Calcule las soluciones del sistema de ecuaciones.")
 
     x = determinante_x / determinante_principal
@@ -337,48 +303,30 @@ def mostrar_procedimiento(sistema):
     print(f"   x = Determinante X / Determinante Principal")
     print(f"     = {determinante_x} / {determinante_principal}")
     print(f"     = {x}\n")
-
     print(f"   y = Determinante Y / Determinante Principal")
     print(f"     = {determinante_y} / {determinante_principal}")
     print(f"     = {y}\n")
-
     print(f"   z = Determinante Z / Determinante Principal")
     print(f"     = {determinante_z} / {determinante_principal}")
     print(f"     = {z}\n")
 
-    mostrar_resultado_sa(x, y, z)
+    resultado_sa(x, y, z)
 
 # markov
 
-def ingresar_matriz_mae():
-    print("Ingrese la matriz de transición:")
-    n = int(input("Ingrese el número de filas: "))
-    m = int(input("Ingrese el número de columnas: "))
-
-    matriz = []
-    for i in range(n):
-        fila = []
-        for j in range(m):
-            elemento = float(input(f"Ingrese el elemento [{i}][{j}]: "))
-            fila.append(elemento)
-        matriz.append(fila)
-
-    return matriz
-
-def calcular_distribucion_estacionaria(matriz, estado_inicial, num_iteraciones):
+def calcular_distribucion(matriz, estado, num):
     matriz_np = np.array(matriz)
-    distribucion_actual = np.array(estado_inicial, ndmin=2).T
-    print("\nCalculando la distribución estacionaria:")
+    actual = np.array(estado, ndmin=2).T
+    print("\nCalculando la distribución:")
 
-    for i in range(num_iteraciones):
+    for i in range(num):
         print(f"\nIteración {i + 1}:")
-        print(f"Distribución actual:\n{distribucion_actual}")
-
-        distribucion_nueva = multiplicar(matriz_np, distribucion_actual)
-        mostrar_procedimiento_op(matriz_np, distribucion_actual, distribucion_nueva, "Multiplicación")
-        distribucion_actual = distribucion_nueva
-    distribucion_estacionaria = distribucion_actual
-    return distribucion_estacionaria
+        print(f"Distribución actual:\n{actual}")
+        nueva = multiplicar(matriz_np, actual)
+        procedimiento(matriz_np, actual, nueva, "Multiplicación")
+        actual = nueva
+    distribucion = actual
+    return distribucion
 
 while True:
     print('MENU')
@@ -398,34 +346,33 @@ while True:
             print("2. Resta")
             print("3. Multiplicación")
             opcion = input("Seleccione una opción: ")
-
             if opcion == "1" or opcion == "2" or opcion == "3":
                 matriz1 = ingresar_matriz()
                 matriz2 = ingresar_matriz()
                 if opcion == "1":
                     if validar(matriz1, matriz2, "suma"):
                         resultado = sumar_y_resta(matriz1, matriz2, "suma")
-                        mostrar_procedimiento_op(matriz1, matriz2, resultado, "Suma")
+                        procedimiento(matriz1, matriz2, resultado, "Suma")
                         print("\nLa suma de las matrices es:")
-                        mostrar_matriz(resultado)
+                        mostrar(resultado)
                         break
                     else:
                         print("Las matrices no tienen las mismas dimensiones. La operación no es válida.")
                 elif opcion == "2":
                     if validar(matriz1, matriz2, "resta"):
                         resultado = sumar_y_resta(matriz1, matriz2, "resta")
-                        mostrar_procedimiento_op(matriz1, matriz2, resultado, "Resta")
+                        procedimiento(matriz1, matriz2, resultado, "Resta")
                         print("\nLa resta de las matrices es:")
-                        mostrar_matriz(resultado)
+                        mostrar(resultado)
                         break
                     else:
                         print("Las matrices no tienen las mismas dimensiones. La operación no es válida.")
                 elif opcion == "3":
                     if validar(matriz1, matriz2, "multipli"):
                         resultado = multiplicar(matriz1, matriz2)
-                        mostrar_procedimiento_op(matriz1, matriz2, resultado, "Multiplicación")
+                        procedimiento(matriz1, matriz2, resultado, "Multiplicación")
                         print("\nEl producto de las matrices es:")
-                        mostrar_matriz(resultado)
+                        mostrar(resultado)
                         break
                     else:
                         print(
@@ -438,21 +385,18 @@ while True:
             print("Cálculo de la Matriz Inversa:")
             print("1. Ingresar una matriz")
             opcion = input("Seleccione una opción: ")
-
             if opcion == "1":
                 matriz = ingresar_matriz()
-                matriz_inversa = calcular_inversa(matriz)
+                matriz_inversa = inversa(matriz)
                 fila = len(matriz)
                 if matriz_inversa is not None:
-                    print("\nProcedimiento paso a paso:")
                     print("Matriz original:")
-                    mostrar_matriz(matriz)
-                    print("\nMatriz identidad extendida:")
-                    mostrar_matriz(np.concatenate((np.array(matriz), np.eye(fila)), axis=1))
-                    print("\nEliminación Gaussiana:")
-                    mostrar_matriz(np.array(matriz_inversa))
-                    print("\nLa matriz inversa es:")
-                    mostrar_matriz(matriz_inversa)
+                    mostrar(matriz)
+                    print("Matriz identidad:")
+                    mostrar(np.concatenate((np.array(matriz), np.eye(fila)), axis=1))
+                    print("Eliminación Gaussiana:")
+                    mostrar(np.array(matriz_inversa))
+                    mostrar(matriz_inversa)
                     break
                 else:
                     print("\nLa matriz no tiene inversa.")
@@ -465,12 +409,11 @@ while True:
             print("Cálculo del Rango de una Matriz:")
             print("1. Ingresar una matriz")
             opcion = input("Seleccione una opción: ")
-
             if opcion == "1":
                 matriz = ingresar_matriz()
                 print("\nLa matriz ingresada es:")
-                mostrar_matriz(matriz)
-                mostrar_paso_a_paso(matriz)
+                mostrar(matriz)
+                paso_a_paso(matriz)
                 break
             else:
                 print("Opción inválida. Por favor, ingrese una opción válida.\n")
@@ -481,13 +424,12 @@ while True:
             print("\nCálculo del Determinante de una Matriz:")
             print("1. Ingresar una matriz")
             opcion = input("Seleccione una opción: ")
-
             if opcion == "1":
                 matriz = ingresar_matriz()
                 print("\nLa matriz ingresada es:")
-                mostrar_matriz(matriz)
+                mostrar(matriz)
                 determinante, etapas = calcular_determinante(matriz)
-                mostrar_resultado(determinante, etapas)
+                resultado(determinante, etapas)
                 break
             else:
                 print("Opción inválida. Por favor, ingrese una opción válida.\n")
@@ -498,12 +440,10 @@ while True:
             print("\nSistema de ecuaciones lienales por Sarrus.")
             print("1.Ingresar el sistema de ecuaciones")
             opcion = input("Seleccione una opcion: ")
-
             if opcion == "1":
                 sistema = ingresar_sistema()
                 mostrar_procedimiento(sistema)
                 break
-
             else:
                 print("Opción inválida. Por favor, ingrese una opción válida.\n")
                 continue
@@ -512,26 +452,18 @@ while True:
         while True:
             print('1. Ingresar cadena de Markov')
             opcion = input("Seleccione una opcion: ")
-
             if opcion == "1":
-                matriz = ingresar_matriz_mae()
-
+                matriz = ingresar_matriz()
                 print("\nMatriz de transición:")
                 print(np.array(matriz))
-
-                estado_inicial = input("Ingrese el estado inicial separado por comas: ")
-                estado_inicial = [float(x.strip()) for x in estado_inicial.split(",")]
-                print(estado_inicial)
-
-                num_iteraciones = int(input("Ingrese el número de iteraciones: "))
-
-                distribucion_estacionaria = calcular_distribucion_estacionaria(matriz, estado_inicial, num_iteraciones)
-
+                estado = ingresar_estado()
+                print(estado)
+                iteraciones = int(input("Ingrese el número de iteraciones: "))
+                distribucion = calcular_distribucion(matriz, estado, iteraciones)
                 print("\nLa distribución estacionaria es:")
-                for i, probabilidad in enumerate(distribucion_estacionaria):
+                for i, probabilidad in enumerate(distribucion):
                     print(f"P({i}) = {probabilidad}")
                 break
-
             else:
                 print("Opción inválida. Por favor, ingrese una opción válida.\n")
                 continue
